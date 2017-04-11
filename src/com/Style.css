@@ -1,0 +1,26 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 06/04/2017, 14:47:12
+    Author     : Marcel
+*/
+
+.toggle-button{
+    -fx-background-color: lightpink;
+    -fx-background-radius:30;
+    -fx-pref-width: 30pt;
+    -fx-pref-height: 30pt;
+    -fx-background-insets: 0px; 
+ 
+}
+
+.toggle-button:hover{
+    -fx-background-color: bisque;
+}
+
+.toggle-button:selected{
+    -fx-background-color: aquamarine;
+}
