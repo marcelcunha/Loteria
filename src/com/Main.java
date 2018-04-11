@@ -15,16 +15,17 @@ import javafx.stage.Stage;
  *
  * @author Marcel
  */
-public class GeradorDeVolantes extends Application {
-    
+public class Main extends Application {
+
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("volante.fxml"));
+         Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
         
-        Scene scene = new Scene(root);
+         Scene scene = new Scene(root);
         
-        stage.setScene(scene);
-        stage.show();
+         stage.setScene(scene);
+         stage.show();
+       
     }
 
     /**
@@ -33,5 +34,5 @@ public class GeradorDeVolantes extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

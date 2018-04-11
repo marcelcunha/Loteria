@@ -15,6 +15,7 @@ import javafx.print.PageOrientation;
 import javafx.print.Paper;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -25,45 +26,61 @@ import javafx.scene.shape.Rectangle;
  */
 public abstract class Volante {
 
-    protected List<Set<Integer>> jogos;
-
-    protected int QTD_DEZENAS;
+    /*Número de equivalencia entre milímetros e a unidade de medida da API*/
     protected static final double ESCALA = 3;
+    
+    /*Altura do retangulo para marcação no bilhete*/
     protected static final double RETANGULO_ALTURA = 2 * ESCALA;
+    
+    /*Largura do retangulo para marcação no bilhete*/
     protected static final double RETANGULO_LARGURA = 4 * ESCALA;
+    
+    /*Distância horizontal entre um retângulo e outro*/
     protected static final double DISTANCIA_X = (2 * ESCALA) + RETANGULO_LARGURA;
+   
+    /*Distância vertival entre um retângulo e outro*/
     protected static final double DISTANCIA_Y = (ESCALA) + RETANGULO_ALTURA;
+    
+    /*Quantidade de jogos que pode ser feita por bilhete*/
+    protected int JOGOS_POR_BILHETE;
 
-    protected Pane pane = new Pane();
-
-    public Volante(List<Set<Integer>> jogos) {
-        this.jogos = jogos;
-        this.QTD_DEZENAS = jogos.size();
+    public Volante(int JOGOS_POR_CARTAO) {
+        this.JOGOS_POR_BILHETE = JOGOS_POR_CARTAO;
     }
+    
+    /**
+     * Preenche o pane com retangulos nas marcações indicadas, 
+     * simulando o prrenchimento de um bilhete de loteria 
+     * @param set
+     * @param espacamento
+     * @param pane 
+     */
+    private void preencheVolante(Set<Integer> set, double espacamento, Pane pane) {
+        for (Integer i : set) {
 
-    protected void preencheVolante(double espacamento) {
-        for (int i = 0, j = 0; i < QTD_DEZENAS; i++) {
-            int mod = (i % 10);
-            if (mod == 0) {
-                j++;
-            }
-            
             Rectangle r = new Rectangle(RETANGULO_LARGURA, RETANGULO_ALTURA, Color.BLACK);
 
-            r.setLayoutX(DISTANCIA_X * mod);
-            r.setLayoutY((DISTANCIA_Y + espacamento) * j);
+            r.setLayoutX(DISTANCIA_X * (i % 10));
+            r.setLayoutY((DISTANCIA_Y * Math.floor(i / 10)) + ESCALA * espacamento);
 
             pane.getChildren().add(r);
             // }
         }
     }
-
-    protected void imprimeVolante(double esquerda, double topo) {
+    
+    /**
+     * Envia para impressão 
+     * @param esquerda
+     * @param topo
+     * @param pages 
+     */
+    private void imprimeVolante(double esquerda, double topo, List<Node> pages) {
 
         List<Printer> list = new ArrayList<>(Printer.getAllPrinters());
 
         Paper foto = PrintHelper.createPaper("foto", 100, 150, Units.MM);
         Printer p = list.get(1);
+
         PageLayout layout = p.createPageLayout(foto, PageOrientation.PORTRAIT, esquerda * ESCALA, 9 * ESCALA, topo * ESCALA, 10 * ESCALA);
 
 
@@ -72,12 +89,34 @@ public abstract class Volante {
         if (job != null) {
             //job.showPrintDialog(null);
 
-            boolean success = job.printPage(layout, pane);
-            if (success) {
-                job.endJob();
+            for (Node n : pages) {
+                job.printPage(layout, n);
             }
+
+            job.endJob();
         }
     }
 
-    protected abstract void criaVolante(int numJogos);
+    
+    protected void geraVolantes(List<Set<Integer>> jogos, double espacamento, double esquerda, double topo) {
+        List<Node> imprimir = new ArrayList<>();
+        
+
+        for (int i = 0; i < jogos.size(); i = i + JOGOS_POR_BILHETE) {
+           Pane pane = new Pane();
+           
+           List<Set<Integer>> volante = jogos.subList(i,(i+1) == jogos.size()-JOGOS_POR_BILHETE?jogos.size()-1:i+JOGOS_POR_BILHETE );
+
+            geraVolante(volante, espacamento, pane);
+
+            imprimir.add(pane);
+        }
+        imprimeVolante(esquerda, topo, imprimir);
+    }
+    
+    private void geraVolante(List<Set<Integer>> jogos, double espacamento, Pane pane){
+        for(int i=0 ; i<JOGOS_POR_BILHETE; i++){
+            preencheVolante(jogos.get(i), i * espacamento, pane);
+        }
+    }
 }

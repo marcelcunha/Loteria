@@ -5,22 +5,38 @@
  */
 package com.impressao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 /**
  *
  * @author Marcel
  */
-public class DuplaSena extends Volante{
-
-    public DuplaSena(List<Set<Integer>> jogos) {
-        super(marcacoes, QTD_DEZENAS);
+public class DuplaSena extends Volante {
+    /**/
+    private static final int MAX_DEZENAS = 50;
+    private static final double ESPACAMENTO = 23;
+    private static final double ESQUERDA = 10.9;
+    private static final double TOPO = 5.9;
+    
+    public static int getMAX_DEZENAS() {
+        return MAX_DEZENAS;
     }
 
-    @Override
-    protected void criaVolante(int numJogos) {
-       
+    public DuplaSena(int JOGOS_POR_CARTAO) {
+        super(JOGOS_POR_CARTAO);
     }
+
+    public DuplaSena() {
+        super(2);
+    }
+
+    public void geraVolantes(List<Set<Integer>> jogos) {
+        super.geraVolantes(jogos, ESPACAMENTO, ESQUERDA, TOPO); 
+    }
+    
     
 }

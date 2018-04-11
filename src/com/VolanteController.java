@@ -61,7 +61,7 @@ public class VolanteController implements Initializable {
         print[9] = true;
         print[23] = true;
 
-        preencheVolante(print);
+  //      preencheVolante(print);
         imprimirVolante();
 
     }

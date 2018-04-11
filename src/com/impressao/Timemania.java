@@ -9,6 +9,10 @@ package com.impressao;
  *
  * @author Marcel
  */
-public class TimeMania {
-    
+public class Timemania {
+     private static final int MAX_DEZENAS = 80;
+
+    public static int getMAX_DEZENAS() {
+        return MAX_DEZENAS;
+    }
 }
